@@ -39,3 +39,22 @@ function useJobsInProgress(groupId: string) {
 }
 
 declare function fetchJobs(groupId: string): Promise<{ jobs: Job[] }>;
+
+// Consumer: a plain list bound to the same query. No websocket, no manual
+// re-fetch button — while `useJobsInProgress` is still polling, each row
+// just re-renders with whatever status came back, so a row visibly flips
+// from "processing" to "done" (or "failed") on its own as the backend
+// finishes that job, and polling stops once none are left processing.
+function JobsList({ groupId }: { groupId: string }) {
+  const { data } = useJobsInProgress(groupId);
+
+  return (
+    <ul>
+      {data?.jobs.map((job) => (
+        <li key={job.id}>
+          {job.id}: {job.status}
+        </li>
+      ))}
+    </ul>
+  );
+}

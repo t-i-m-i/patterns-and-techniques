@@ -42,3 +42,8 @@ async function getOrGenerateDescription(name: string): Promise<string | null> {
 
 declare const db: { query: <T>(sql: string, params?: unknown[]) => Promise<{ rows: T[] }> };
 declare function callExpensiveGenerationApi(name: string): Promise<string | null>;
+
+// Called directly from a route handler — the caller doesn't know or care
+// whether the description came from cache or a fresh generation call:
+//   const description = await getOrGenerateDescription(request.params.name);
+//   reply.send({ description });

@@ -38,3 +38,8 @@ async function getReport(groupId: string): Promise<Report> {
 }
 
 declare function buildReportFromDb(groupId: string): Promise<Report>;
+
+// Called directly from a route handler, same as any other async lookup —
+// the cache is entirely hidden behind the function boundary:
+//   const report = await getReport(request.params.groupId);
+//   reply.send(report);

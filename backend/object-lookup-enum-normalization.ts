@@ -26,3 +26,7 @@ function formatPlanLabel(rawPlan: string): string {
   // unchanged rather than being dropped or throwing.
   return PLAN_LABELS[rawPlan] ?? rawPlan;
 }
+
+// Called while serializing a row for the response — normalization stays a
+// one-line concern at the boundary, not scattered through the query layer:
+//   reply.send({ ...student, planLabel: formatPlanLabel(student.plan) });

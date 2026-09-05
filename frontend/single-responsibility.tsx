@@ -83,3 +83,25 @@ export function mapDataToUI(entity: { id: number; title: string }, stages: Stage
     stages: mapStages(stages),
   };
 }
+
+// --- usage: a component consuming the mapped view-model, not the raw shape -
+
+function RoadmapView({ entity, stages }: { entity: { id: number; title: string }; stages: StageInput[] }) {
+  const { summary, stages: mappedStages } = mapDataToUI(entity, stages);
+
+  return (
+    <section>
+      <h2>{summary.title}</h2>
+      {mappedStages.map((stage, index) => (
+        <div key={index}>
+          <h3>{stage.title}</h3>
+          <ul>
+            {stage.openSlots.map((slot) => (
+              <li key={slot.id}>{slot.title}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  );
+}

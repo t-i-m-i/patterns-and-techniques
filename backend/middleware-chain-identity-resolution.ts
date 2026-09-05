@@ -71,3 +71,8 @@ const identityResolutionChain: PreHandler[] = [resolveIdentity, applyImpersonati
 
 declare function findOrCreateInternalUser(sessionUserId: string): Promise<string>;
 declare function getActiveImpersonationTarget(userId: string): Promise<string | null>;
+
+// Wired up once, at startup — registration order *is* the chain:
+//   for (const stage of identityResolutionChain) {
+//     app.addHook("preHandler", stage);
+//   }

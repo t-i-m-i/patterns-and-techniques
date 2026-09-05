@@ -70,3 +70,8 @@ async function getPage(pool: Pool, candidateIds: number[], cursorParam?: string)
 
   return { items, nextCursor };
 }
+
+// Wired up in a route handler — the client only ever sees an opaque string,
+// never an offset:
+//   const { items, nextCursor } = await getPage(pool, candidateIds, request.query.cursor);
+//   reply.send({ items, nextCursor });
