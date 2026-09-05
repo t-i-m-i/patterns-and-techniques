@@ -19,6 +19,7 @@ type Request = {
   url: string;
   sessionUserId?: string;
   user?: { id: string; role?: string };
+  headers: Record<string, string | undefined>;
 };
 
 type Reply = { code: (status: number) => { send: (body: unknown) => void } };
@@ -56,10 +57,15 @@ const resolveIdentity: PreHandler = async (request, reply) => {
 
 // Stage 2: a later, independently registered hook that can further override
 // the resolved identity (e.g. an "impersonate" feature for support staff).
+//
+// This is stateless per-request, not a lookup against stored state: the
+// requested target rides along on *this* request (e.g. a header the client
+// sends), and `resolveImpersonationTarget` checks whether the current user
+// is allowed to act as that target before honoring it.
 const applyImpersonation: PreHandler = async (request) => {
   if (!request.user) return;
 
-  const impersonatedId = await getActiveImpersonationTarget(request.user.id);
+  const impersonatedId = await resolveImpersonationTarget(request);
   if (impersonatedId) {
     request.user = { id: impersonatedId };
   }
@@ -70,7 +76,10 @@ const applyImpersonation: PreHandler = async (request) => {
 const identityResolutionChain: PreHandler[] = [resolveIdentity, applyImpersonation];
 
 declare function findOrCreateInternalUser(sessionUserId: string): Promise<string>;
-declare function getActiveImpersonationTarget(userId: string): Promise<string | null>;
+
+// Reads the requested target off the request itself (e.g. a header) and
+// authorizes it against the current `request.user.id` before returning it.
+declare function resolveImpersonationTarget(request: Request): Promise<string | null>;
 
 // Wired up once, at startup — registration order *is* the chain:
 //   for (const stage of identityResolutionChain) {
