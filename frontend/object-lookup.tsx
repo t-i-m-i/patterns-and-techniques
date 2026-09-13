@@ -8,6 +8,11 @@
  *
  * Shape: `COMPONENTS_BY_KEY[key] ?? Fallback` replaces branching logic with
  * a single object access.
+ *
+ * (In the original React Native app, icons were components rather than
+ * image URLs because RN has no native SVG rendering — a build-time
+ * transformer compiles each imported `.svg` into a component. That's
+ * incidental to this pattern, which applies to picking any component by key.)
  */
 
 import type { ComponentType } from "react";
