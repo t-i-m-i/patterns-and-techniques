@@ -9,3 +9,10 @@ itself.
 
 Each file is self-contained and anonymized - no real domain names, business
 logic, or proprietary code, just the shape of the solution.
+
+## About me
+
+Hi, I'm Tymoteusz.
+I'm a Fullstack Developer working across frontend, backend, and user experience.
+I build native mobile apps, backend APIs, and work with databases.
+I'm looking for an opportunity to keep growing as a Software Engineer - Fullstack web or React Native.
